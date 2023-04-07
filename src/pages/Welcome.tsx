@@ -31,6 +31,7 @@ export const Welcome = () => {
           disabled={user.name ? false : true}
           className="bg-[#7695EC] text-white font-bold md:self-end px-[30px] py-[6px] rounded-lg mt-4 disabled:opacity-60 hover:scale-105 hover:bg-[#4874eb] duration-300"
           onClick={() => navigate('/posts')}
+          onKeyDown={(e) => e.key === 'Enter' && navigate('/posts')}
         >
           ENTER
         </button>

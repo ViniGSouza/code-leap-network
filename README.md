@@ -1,7 +1,7 @@
 # CodeLeap Network
 
 <p align="center">
-  <img alt="" src=".github/dogs.png" width="100%">
+  <img alt="" src="./public/codeleap.png" width="100%">
 </p>
 
 
