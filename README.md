@@ -10,6 +10,7 @@
 - Vite
 - ReactJS
 - React Router Dom
+- TailwindCSS
 - Redux
 - Axios
 - Date-fns
