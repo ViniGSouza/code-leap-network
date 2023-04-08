@@ -10,9 +10,11 @@ import { deletePost } from '../actions/deletePost';
 import { updatePost } from '../actions/updatePost';
 import { useDispatch } from 'react-redux';
 import { setName } from '../redux/reducers/nameReducer';
+import { Loading } from '../components/Loading/Loading';
 
 export const Posts = () => {
   const [posts, setPosts] = useState<Post>();
+  const [loading, setLoading] = useState(false);
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
   const [prevPageUrl, setPrevPageUrl] = useState<string | null>(null);
   const [titlePost, setTitlePost] = useState("");
@@ -24,31 +26,39 @@ export const Posts = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    setLoading(true);
     loadPosts();
+    setLoading(false);
   }, [])
   
   const loadPosts = async () => {
+    setLoading(true);
     let data = await getPosts();
     setPosts(data);
     setNextPageUrl(data.next);
     setPrevPageUrl(data.previous);
+    setLoading(false);
   }
 
   const handlePrevPage = async () => {
     if (prevPageUrl) {
+      setLoading(true);
       let data = await getPosts(prevPageUrl);
       setPosts(data);
       setNextPageUrl(data.next);
       setPrevPageUrl(data.previous);
+      setLoading(false);
     }
   };
 
   const handleNextPage = async () => {
     if (nextPageUrl) {
+      setLoading(true);
       let data = await getPosts(nextPageUrl);
       setPosts(data);
       setNextPageUrl(data.next);
       setPrevPageUrl(data.previous);
+      setLoading(false);
     }
   };
 
@@ -59,18 +69,24 @@ export const Posts = () => {
   }
 
   const handleCreateButton = async () => {
+    setLoading(true);
     await createPost(user.name, titlePost, contentPost);
     loadPosts();
+    setLoading(false);
   }
   
   const handleClickDelete = async (id: string) => {
+    setLoading(true);
     await deletePost(id);
     loadPosts();
+    setLoading(false);
   }
 
   const handleClickEdit = async (id: string) => {
+    setLoading(true);
     await updatePost(id, post.title, post.content);
     loadPosts();
+    setLoading(false);
   }
 
   function formateDate(dateString: string) {
@@ -131,14 +147,18 @@ export const Posts = () => {
         >Create
         </button>
       </div>
-      <div className="flex justify-end gap-4 px-8 mt-6 font-bold text-white">
+      <div className="relative flex justify-end gap-4 px-8 mt-6 font-bold text-white">
         {
           prevPageUrl && 
           <button onClick={handlePrevPage} className="bg-[#7695EC] hover:bg-[#4874eb] hover:scale-95 duration-300 py-2 px-4 rounded-lg">PREVIOUS PAGE</button>
         }
         <button onClick={handleNextPage} className="bg-[#7695EC] hover:bg-[#4874eb] hover:scale-95 duration-300 py-2 px-4 rounded-lg">NEXT PAGE</button>
       </div>
-      {posts?.results.map((post) => (
+      {loading
+        ?
+        <Loading />
+       : 
+       posts?.results.map((post) => (
         <PostItem
           key={post.id}
           title={post.title}
