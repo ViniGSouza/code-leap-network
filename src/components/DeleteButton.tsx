@@ -7,11 +7,6 @@ interface Props {
 }
 
 export const DeleteButton = ({ title, onClick }: Props) => {
-  
-  const handleConfirm = () => {
-    onClick();
-  };
-
 
   return (
     <Dialog.Root>
@@ -42,7 +37,7 @@ export const DeleteButton = ({ title, onClick }: Props) => {
               <Dialog.Close asChild>
                 <button
                   className="px-8 py-1 bg-[#ff5151] text-white font-bold rounded-lg"
-                  onClick={handleConfirm}
+                  onClick={onClick}
                 >
                   Confirm
                 </button>

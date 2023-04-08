@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../redux/hooks/useAppSelector";
-import { setName } from "../redux/nameReducer";
+import { setName } from "../redux/reducers/nameReducer";
 import { useNavigate } from "react-router-dom";
 import { ChangeEvent, KeyboardEvent } from "react";
 
@@ -10,7 +10,7 @@ export const Welcome = () => {
   const user = useAppSelector(state => state.user);
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
-    localStorage.setItem('token_id', e.target.value);
+    localStorage.setItem("token_id", e.target.value);
     dispatch( setName(e.target.value) );
   }
 

@@ -1,20 +1,16 @@
-import { useState } from "react";
 import editIcon from '../assets/edit.svg';
 import * as Dialog from "@radix-ui/react-dialog";
-import { updatePost } from "../actions/updatePost";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "../redux/hooks/useAppSelector";
+import { setContent, setTitle } from "../redux/reducers/updatePostsReducer";
 
 interface Props {
-  id: string,
+  onClick: () => void
 };
 
-export const EditButton = ({ id }: Props) => {
-  const [titlePost, setTitlePost] = useState("");
-  const [contentPost, setContentPost] = useState("");
-
-  const handleClickSave = () => {
-     updatePost(id, titlePost, contentPost);
-    location.reload();
-  };
+export const EditButton = ({ onClick }: Props) => {
+  const dispatch = useDispatch();
+  const post = useAppSelector(state => state.update);
 
   return (
     <Dialog.Root>
@@ -39,15 +35,15 @@ export const EditButton = ({ id }: Props) => {
             <input
               type="text"
               placeholder="Hello world"
-              value={titlePost}
-              onChange={(e) => {setTitlePost(e.target.value)}}
+              value={post.title}
+              onChange={(e) => {dispatch(setTitle(e.target.value))}}
               className="mt-2 border-[1px] border-[#777] rounded-lg pl-[10px] py-1 text-sm w-full"
             />
             <p className="mt-6">Content</p>
             <textarea
               placeholder="Content here"
-              value={contentPost}
-              onChange={(e) => {setContentPost(e.target.value)}}
+              value={post.content}
+              onChange={(e) => {dispatch(setContent(e.target.value))}}
               className="mt-2 border-[1px] border-[#777] rounded-lg pl-[10px] py-1 text-sm w-full h-[80px]"
             />
           </div>
@@ -61,7 +57,7 @@ export const EditButton = ({ id }: Props) => {
             <Dialog.Close asChild>
               <button
                 className="px-10 py-1 bg-[#47B960] text-white font-bold rounded-lg"
-                onClick={handleClickSave}
+                onClick={onClick}
               >
                 Save
               </button>

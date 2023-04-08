@@ -1,18 +1,25 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getPosts } from '../actions/getPosts';
 import { Post } from '../types/Post';
 import { PostItem } from '../components/PostItem';
 import { parseISO, formatDistanceStrict, format } from 'date-fns';
 import { useAppSelector } from '../redux/hooks/useAppSelector';
 import { createPost } from '../actions/createPost';
-import { useNavigate } from 'react-router-dom';
+import { deletePost } from '../actions/deletePost';
+import { updatePost } from '../actions/updatePost';
+import { useDispatch } from 'react-redux';
+import { setName } from '../redux/reducers/nameReducer';
 
 export const Posts = () => {
   const [posts, setPosts] = useState<Post>();
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
+  const [prevPageUrl, setPrevPageUrl] = useState<string | null>(null);
   const [titlePost, setTitlePost] = useState("");
   const [contentPost, setContentPost] = useState("");
   const user = useAppSelector(state => state.user);
+  const post = useAppSelector(state => state.update);
+  const dispatch = useDispatch();
   const token = localStorage.getItem("token_id");
   const navigate = useNavigate();
 
@@ -24,19 +31,31 @@ export const Posts = () => {
     let data = await getPosts();
     setPosts(data);
     setNextPageUrl(data.next);
+    setPrevPageUrl(data.previous);
   }
+
+  const handlePrevPage = async () => {
+    if (prevPageUrl) {
+      let data = await getPosts(prevPageUrl);
+      setPosts(data);
+      setNextPageUrl(data.next);
+      setPrevPageUrl(data.previous);
+    }
+  };
 
   const handleNextPage = async () => {
     if (nextPageUrl) {
       let data = await getPosts(nextPageUrl);
       setPosts(data);
       setNextPageUrl(data.next);
+      setPrevPageUrl(data.previous);
     }
   };
 
   const handleInitialPage = async () => {{
       let data = await getPosts();
       setPosts(data);
+      setNextPageUrl(data.next);
     }
   };
 
@@ -53,32 +72,50 @@ export const Posts = () => {
     }
   }
 
-  const handleCreateButton = () => {
-    createPost(user.name, titlePost, contentPost);
-    location.reload();
-  }
-
   const handleLogout = () => {
     localStorage.removeItem("token_id");
+    dispatch( setName('') );
     navigate('/');
-  };
+  }
+
+  const handleCreateButton = () => {
+    createPost(user.name, titlePost, contentPost);
+    loadPosts();
+  }
+  
+  const handleClickDelete = (id: string) => {
+    deletePost(id);
+    loadPosts();
+  }
+
+  const handleClickEdit = (id: string) => {
+    updatePost(id, post.title, post.content);
+    loadPosts();
+  }
 
   return (
     <div className="bg-white max-w-[800px] flex flex-col mx-auto opacity-0 animate-enter">
-      <div className="bg-[#7695EC] w-full py-[27px] px-[37px] flex justify-between">
-        <h1 className="text-white text-[22px] font-bold">CodeLeap Network</h1>
-        { token && 
-        <button
-        onClick={handleLogout}
-        className="px-4 py-1 bg-[#ff5151] font-medium text-white rounded-lg hover:scale-95 hover:bg-[#fa2b2b] duration-300"
-      >
-          Logout
-      </button>          
+      <div className="bg-[#7695EC] w-full py-[27px] px-[37px] flex items-center justify-between text-white">
+        <h1 className="text-[22px] font-bold">CodeLeap Network</h1>
+        {
+          token &&
+          <>
+            <p className="text-[18px]">Hi, <span className="font-bold">{`${token}`} :)</span></p>
+            <button
+              className="bg-[#ff5151] px-4 py-1 rounded-lg duration-300 hover:scale-95 hover:bg-[#fc3a3a]"
+              onClick={handleLogout}
+            >
+            Logout
+          </button>
+          </>
         }
+
       </div>
 
       <div className="border-[1px] border-[#999] rounded-2xl bg-white p-6 mx-6 mt-6 flex flex-col">
-        <h2 className="text-[22px] font-bold">What's on your mind?</h2>
+        <h2 className="text-[22px] font-bold">
+          Whats on your mind?
+        </h2>
         <p className="mt-6">Title</p>
         <input
           type="text"
@@ -100,6 +137,13 @@ export const Posts = () => {
         >Create
         </button>
       </div>
+      <div className="flex justify-end gap-4 px-8 mt-6 font-bold text-white">
+        {
+          prevPageUrl && 
+          <button onClick={handlePrevPage} className="bg-[#7695EC] hover:bg-[#4874eb] hover:scale-95 duration-300 py-2 px-4 rounded-lg">PREVIOUS PAGE</button>
+        }
+        <button onClick={handleNextPage} className="bg-[#7695EC] hover:bg-[#4874eb] hover:scale-95 duration-300 py-2 px-4 rounded-lg">NEXT PAGE</button>
+      </div>
       {posts?.results.map((post) => (
         <PostItem
           key={post.id}
@@ -108,12 +152,10 @@ export const Posts = () => {
           createdAt={formateDate(post.created_datetime)}
           content={post.content}
           id={post.id.toString()}
+          onClickDelete={() => handleClickDelete(post.id.toString())}
+          onClickEdit={() => handleClickEdit(post.id.toString())}
         />
       ))}
-      <div className="flex justify-center gap-4 mb-6 font-bold text-white">
-        <button onClick={handleInitialPage} className="bg-[#7695EC] py-2 px-4 rounded-lg">BACK TO START</button>
-        <button onClick={handleNextPage} className="bg-[#7695EC] py-2 px-4 rounded-lg">NEXT PAGE</button>
-      </div>
     </div>
   );
 }
