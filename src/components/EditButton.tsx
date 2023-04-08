@@ -16,7 +16,7 @@ export const EditButton = ({ onClick }: Props) => {
     <Dialog.Root>
     <Dialog.Trigger asChild>
       <button>
-        <img src={editIcon} alt="delete icon" />
+        <img src={editIcon} alt="edit icon" />
       </button>
     </Dialog.Trigger>
     <Dialog.Portal>

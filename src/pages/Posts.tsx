@@ -52,26 +52,6 @@ export const Posts = () => {
     }
   };
 
-  const handleInitialPage = async () => {{
-      let data = await getPosts();
-      setPosts(data);
-      setNextPageUrl(data.next);
-    }
-  };
-
-  function formateDate(dateString: string) {
-
-    const date = parseISO(dateString);
-    const now = new Date();
-    const diffMin = Math.round((now.getTime() - date.getTime()) / 1000 / 60);
-  
-    if (diffMin < 1440) {
-      return formatDistanceStrict(date, now, { addSuffix: true });
-    } else {
-      return format(date, 'MM-dd-yyyy');
-    }
-  }
-
   const handleLogout = () => {
     localStorage.removeItem("token_id");
     dispatch( setName('') );
@@ -93,12 +73,25 @@ export const Posts = () => {
     loadPosts();
   }
 
+  function formateDate(dateString: string) {
+
+    const date = parseISO(dateString);
+    const now = new Date();
+    const diffMin = Math.round((now.getTime() - date.getTime()) / 1000 / 60);
+  
+    if (diffMin < 1440) {
+      return formatDistanceStrict(date, now, { addSuffix: true });
+    } else {
+      return format(date, 'MM-dd-yyyy');
+    }
+  }
+
   return (
     <div className="bg-white max-w-[800px] flex flex-col mx-auto opacity-0 animate-enter">
       <div className="bg-[#7695EC] w-full py-[27px] px-[37px] flex items-center justify-between text-white">
         <h1 className="text-[22px] font-bold">CodeLeap Network</h1>
         {
-          token &&
+          token && user.name &&
           <>
             <p className="text-[18px]">Hi, <span className="font-bold">{`${token}`} :)</span></p>
             <button
