@@ -126,7 +126,8 @@ export const Posts = () => {
         />
         <button
           onClick={handleCreateButton}
-          className="bg-[#7695EC] text-white font-bold self-end px-10 py-[6px] rounded-lg mt-4 disabled:opacity-60 hover:scale-105 hover:bg-[#4874eb] duration-300"
+          disabled={titlePost && contentPost  ? false : true}
+          className="bg-[#7695EC] text-white font-bold self-end px-10 py-[6px] rounded-lg mt-4 disabled:opacity-60  hover:scale-105 hover:bg-[#4874eb] duration-300"
         >Create
         </button>
       </div>
