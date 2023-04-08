@@ -78,18 +78,18 @@ export const Posts = () => {
     navigate('/');
   }
 
-  const handleCreateButton = () => {
-    createPost(user.name, titlePost, contentPost);
+  const handleCreateButton = async () => {
+    await createPost(user.name, titlePost, contentPost);
     loadPosts();
   }
   
-  const handleClickDelete = (id: string) => {
-    deletePost(id);
+  const handleClickDelete = async (id: string) => {
+    await deletePost(id);
     loadPosts();
   }
 
-  const handleClickEdit = (id: string) => {
-    updatePost(id, post.title, post.content);
+  const handleClickEdit = async (id: string) => {
+    await updatePost(id, post.title, post.content);
     loadPosts();
   }
 
