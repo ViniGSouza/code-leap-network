@@ -13,14 +13,13 @@ interface Props {
 }
 
 export const PostItem = (props: Props) => {
-  const user = useAppSelector(state => state.user);
   const token = localStorage.getItem("token_id");
 
   return (
     <article className="rounded-2xl border-[1px] border-[#999] m-6 overflow-hidden">
-      <div className="flex justify-between bg-[#7695EC] p-6 text-white text-[22px] font-bold">
-        {props.title}
-        {user.name || token === props.author && 
+      <div className="flex justify-between bg-[#7695EC] p-6  font-bold">
+        <h2 className="text-white text-[22px]">{props.title}</h2>
+        {token === props.author && 
           <div className='flex items-center gap-2 md:gap-x-[34px]'>
           <DeleteButton
             title='Are you sure you want delete this item?'

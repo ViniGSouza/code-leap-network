@@ -88,10 +88,10 @@ export const Posts = () => {
 
   return (
     <div className="bg-white max-w-[800px] flex flex-col mx-auto opacity-0 animate-enter">
-      <div className="bg-[#7695EC] w-full py-[27px] px-[37px] flex items-center justify-between text-white">
+      <div className="bg-[#7695EC] w-full py-[27px] px-[37px] flex flex-col md:flex-row gap-4 md:gap-0 items-center justify-between text-white">
         <h1 className="text-[22px] font-bold">CodeLeap Network</h1>
         {
-          token && user.name &&
+          token &&
           <>
             <p className="text-[18px]">Hi, <span className="font-bold">{`${token}`} :)</span></p>
             <button
