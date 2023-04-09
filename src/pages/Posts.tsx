@@ -72,6 +72,8 @@ export const Posts = () => {
     setLoading(true);
     await createPost(user.name, titlePost, contentPost);
     loadPosts();
+    setTitlePost('');
+    setContentPost('');
     setLoading(false);
   }
   
