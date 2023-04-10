@@ -12,6 +12,7 @@ import { useDispatch } from 'react-redux';
 import { setName } from '../redux/reducers/nameReducer';
 import { Loading } from '../components/Loading/Loading';
 import { HiHome } from "react-icons/hi";
+import { setContent, setTitle } from '../redux/reducers/updatePostsReducer';
 
 export const Posts = () => {
   const [posts, setPosts] = useState<Post>();
@@ -89,6 +90,8 @@ export const Posts = () => {
     setLoading(true);
     await updatePost(id, post.title, post.content);
     loadPosts();
+    dispatch( setTitle('') );
+    dispatch( setContent('') );
     setLoading(false);
   }
 
@@ -144,7 +147,7 @@ export const Posts = () => {
         />
         <button
           onClick={handleCreateButton}
-          disabled={titlePost && contentPost  ? false : true}
+          disabled={titlePost && contentPost ? false : true}
           className="bg-[#7695EC] text-white font-bold self-end px-10 py-[6px] rounded-lg mt-4 disabled:opacity-60 hover:scale-105 hover:bg-[#4874eb] duration-300"
         >Create
         </button>
@@ -153,8 +156,8 @@ export const Posts = () => {
         {
           prevPageUrl && 
           <>
-            <button onClick={loadPosts} className="bg-[#7695EC] hover:bg-[#4874eb] hover:scale-95 duration-300 py-2 px-2 rounded-lg">
-              <HiHome />
+            <button onClick={loadPosts} className="text-[#7695EC] px-2 py-2 duration-300 rounded-lg hover:scale-95">
+              <HiHome className="w-8 h-8" />
             </button>
             
             <button onClick={handlePrevPage} className="bg-[#7695EC] hover:bg-[#4874eb] hover:scale-95 duration-300 py-2 px-4 rounded-lg">PREVIOUS PAGE</button>          
