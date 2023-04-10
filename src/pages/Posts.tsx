@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { getPosts } from '../actions/getPosts';
 import { Post } from '../types/Post';
 import { PostItem } from '../components/PostItem';
-import { parseISO, formatDistanceStrict, format } from 'date-fns';
 import { useAppSelector } from '../redux/hooks/useAppSelector';
 import { createPost } from '../actions/createPost';
 import { deletePost } from '../actions/deletePost';
@@ -13,6 +12,7 @@ import { setName } from '../redux/reducers/nameReducer';
 import { Loading } from '../components/Loading/Loading';
 import { HiHome } from "react-icons/hi";
 import { setContent, setTitle } from '../redux/reducers/updatePostsReducer';
+import { formateDate } from '../utils/formateDate';
 
 export const Posts = () => {
   const [posts, setPosts] = useState<Post>();
@@ -72,7 +72,7 @@ export const Posts = () => {
 
   const handleCreateButton = async () => {
     setLoading(true);
-    await createPost(user.name, titlePost, contentPost);
+    await createPost(token!, titlePost, contentPost);
     loadPosts();
     setTitlePost('');
     setContentPost('');
@@ -93,18 +93,6 @@ export const Posts = () => {
     dispatch( setTitle('') );
     dispatch( setContent('') );
     setLoading(false);
-  }
-
-  function formateDate(dateString: string) {
-    const date = parseISO(dateString);
-    const now = new Date();
-    const diffMin = Math.round((now.getTime() - date.getTime()) / 1000 / 60);
-  
-    if (diffMin < 1440) {
-      return formatDistanceStrict(date, now, { addSuffix: true });
-    } else {
-      return format(date, 'MM-dd-yyyy');
-    }
   }
 
   return (
