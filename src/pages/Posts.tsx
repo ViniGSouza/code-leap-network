@@ -11,6 +11,7 @@ import { updatePost } from '../actions/updatePost';
 import { useDispatch } from 'react-redux';
 import { setName } from '../redux/reducers/nameReducer';
 import { Loading } from '../components/Loading/Loading';
+import { HiHome } from "react-icons/hi";
 
 export const Posts = () => {
   const [posts, setPosts] = useState<Post>();
@@ -92,7 +93,6 @@ export const Posts = () => {
   }
 
   function formateDate(dateString: string) {
-
     const date = parseISO(dateString);
     const now = new Date();
     const diffMin = Math.round((now.getTime() - date.getTime()) / 1000 / 60);
@@ -145,16 +145,25 @@ export const Posts = () => {
         <button
           onClick={handleCreateButton}
           disabled={titlePost && contentPost  ? false : true}
-          className="bg-[#7695EC] text-white font-bold self-end px-10 py-[6px] rounded-lg mt-4 disabled:opacity-60  hover:scale-105 hover:bg-[#4874eb] duration-300"
+          className="bg-[#7695EC] text-white font-bold self-end px-10 py-[6px] rounded-lg mt-4 disabled:opacity-60 hover:scale-105 hover:bg-[#4874eb] duration-300"
         >Create
         </button>
       </div>
       <div className="relative flex justify-end gap-4 px-8 mt-6 font-bold text-white">
         {
           prevPageUrl && 
-          <button onClick={handlePrevPage} className="bg-[#7695EC] hover:bg-[#4874eb] hover:scale-95 duration-300 py-2 px-4 rounded-lg">PREVIOUS PAGE</button>
+          <>
+            <button onClick={loadPosts} className="bg-[#7695EC] hover:bg-[#4874eb] hover:scale-95 duration-300 py-2 px-2 rounded-lg">
+              <HiHome />
+            </button>
+            
+            <button onClick={handlePrevPage} className="bg-[#7695EC] hover:bg-[#4874eb] hover:scale-95 duration-300 py-2 px-4 rounded-lg">PREVIOUS PAGE</button>          
+          </>
         }
-        <button onClick={handleNextPage} className="bg-[#7695EC] hover:bg-[#4874eb] hover:scale-95 duration-300 py-2 px-4 rounded-lg">NEXT PAGE</button>
+        {
+          nextPageUrl &&
+          <button onClick={handleNextPage} className="bg-[#7695EC] hover:bg-[#4874eb] hover:scale-95 duration-300 py-2 px-4 rounded-lg">NEXT PAGE</button>
+        }
       </div>
       {loading
         ?
